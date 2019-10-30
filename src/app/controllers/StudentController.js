@@ -36,8 +36,6 @@ class StudentController {
       req.body
     );
 
-    console.log(`Salvo pelo usuario: ${req.body.userId}`);
-
     return res.json({
       id,
       nome,
@@ -53,18 +51,17 @@ class StudentController {
 
     const schema = Yup.object().shape({
       nome: Yup.string(),
-      email: Yup.string()
-      .email('Informe um email válido'),
+      email: Yup.string().email('Informe um email válido'),
       idade: Yup.number()
         .positive('Campo idade deve ser um número maior que zero')
         .integer()
         .typeError('Campo idade deve ser um número'),
       peso: Yup.number()
-      .positive('Campo peso deve ser um número maior que zero')
-      .typeError('Campo peso deve ser um número'),
+        .positive('Campo peso deve ser um número maior que zero')
+        .typeError('Campo peso deve ser um número'),
       altura: Yup.number()
         .positive('Campo altura deve ser um número maior que zero')
-        .typeError('Campo altura deve ser um número')
+        .typeError('Campo altura deve ser um número'),
     });
 
     const { email } = req.body;
@@ -80,15 +77,19 @@ class StudentController {
     }
 
     if (email && email !== student.email) {
-       const studentExists = await Student.findOne({ where: { email }});
+      const studentExists = await Student.findOne({ where: { email } });
 
-       if (studentExists) {
-        return res.status(400).json({ erros: 'Já existe um aluno com o email informado.' });
-       }
+      if (studentExists) {
+        return res
+          .status(400)
+          .json({ erros: 'Já existe um aluno com o email informado.' });
+      }
     }
 
-    const { nome, idade, peso, altura, updated_at } = await student.update(req.body);
-    
+    const { nome, idade, peso, altura, updated_at } = await student.update(
+      req.body
+    );
+
     return res.json({ id, nome, email, idade, peso, altura, updated_at });
   }
 }
