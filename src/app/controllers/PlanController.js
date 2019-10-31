@@ -30,22 +30,20 @@ class PlanController {
       const { id, title, duration, price, created_at } = await Plan.create(
         req.body
       );
-  
+
       return res.json({
         id,
         title,
         duration,
         price,
         created_at,
-      });      
+      });
     } catch (error) {
-      return res.json({ error });      
+      return res.json({ error });
     }
-    
   }
 
   async update(req, res) {
-
     if (Object.keys(req.body).length === 0)
       return res.status(400).json('Nothing to update.');
 
@@ -70,9 +68,7 @@ class PlanController {
       return res.status(400).json({ error: 'Plan does not found.' });
     }
 
-    const { title, duration, price, updated_at } = await plan.update(
-      req.body
-    );
+    const { title, duration, price, updated_at } = await plan.update(req.body);
 
     return res.json({
       title,
@@ -93,11 +89,11 @@ class PlanController {
       await plan.destroy();
       return res.json({ msg: 'Plan deleted successfully!' });
     } catch (error) {
-      return res.status(400).json({ error: 'Error on trying to delete the plan.' });
+      return res
+        .status(400)
+        .json({ error: 'Error on trying to delete the plan.' });
     }
-    
-  }
-
+}
 }
 
 export default new PlanController();
