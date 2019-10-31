@@ -26,51 +26,78 @@ class PlanController {
       return res.status(400).json({ error: err.errors });
     });
 
-    const { id, title, duration, price, created_at } = await Plan.create(
-      req.body
-    );
-
-    return res.json({
-      id,
-      title,
-      duration,
-      price,
-      created_at,
-    });
+    try {
+      const { id, title, duration, price, created_at } = await Plan.create(
+        req.body
+      );
+  
+      return res.json({
+        id,
+        title,
+        duration,
+        price,
+        created_at,
+      });      
+    } catch (error) {
+      return res.json({ error });      
+    }
+    
   }
 
   async update(req, res) {
+
+    if (Object.keys(req.body).length === 0)
+      return res.status(400).json('Nothing to update.');
+
     const schema = Yup.object().shape({
       title: Yup.string(),
       duration: Yup.number()
-        .positive('Campo duration deve ser um número maior que zero.')
-        .integer('Campo duration deve ser um valor inteiro.')
-        .typeError('Campo duration deve ser um valor numérico.'),
-      price: Yup.number().typeError('Campo price deve ser um valor numérico.'),
+        .positive('duration field must be a number higher than zero.')
+        .integer('duration field must be an integer.')
+        .typeError('duration field must be a number.'),
+      price: Yup.number().typeError('price field must be a number.'),
     });
 
     await schema.validate(req.body).catch(err => {
       return res.status(400).json({ error: err.errors });
     });
 
+    console.log(req.body);
+
     const plan = await Plan.findByPk(req.params.id);
 
     if (!plan) {
-      return res.status(400).json({ error: 'Plano não encontrado.' });
+      return res.status(400).json({ error: 'Plan does not found.' });
     }
 
-    const { id, title, duration, price, updated_at } = await plan.update(
+    const { title, duration, price, updated_at } = await plan.update(
       req.body
     );
 
     return res.json({
-      id,
       title,
       duration,
       price,
       updated_at,
     });
   }
+
+  async delete(req, res) {
+    const plan = await Plan.findByPk(req.params.id);
+
+    if (!plan) {
+      return res.status(400).json({ error: 'Plan does not exists.' });
+    }
+
+    try {
+      await plan.destroy();
+      return res.json({ msg: 'Plan deleted successfully!' });
+    } catch (error) {
+      return res.status(400).json({ error: 'Error on trying to delete the plan.' });
+    }
+    
+  }
+
 }
 
 export default new PlanController();
