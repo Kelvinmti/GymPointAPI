@@ -7,7 +7,6 @@ import Student from '../models/Student';
 
 class EnrollmentController {
   async store(req, res) {
-
     const schema = Yup.object().shape({
       student_id: Yup.number()
         .required('student field is mandatory.')
@@ -24,14 +23,18 @@ class EnrollmentController {
         .typeError('start date field must be a valid date.'),
     });
 
+    const errorMessage = [];
     await schema.validate(req.body).catch(err => {
-      return res.status(400).json({ error: err.errors });
+      errorMessage.push(err.errors);
     });
-    
+
+    if (errorMessage.length > 0)
+      return res.status(400).json({ error: errorMessage });
+
     const { student_id, plan_id, start_date } = req.body;
 
     const plan = await Plan.findByPk(plan_id);
-    
+    console.log('foi1');
     if (!plan) {
       return res.status(400).json({ error: 'Plan not found.' });
     }
@@ -57,21 +60,20 @@ class EnrollmentController {
         plan_id,
         start_date: start_date_formated,
         end_date,
-        price: total_price
+        price: total_price,
       });
-  
-      res.json({
+
+      return res.json({
         student_id,
         plan_id,
         start_date_formated,
         end_date,
         total_price,
-        created_at
-      });      
+        created_at,
+      });
     } catch (error) {
       return res.status(400).json({ error });
     }
-    
   }
 }
 
