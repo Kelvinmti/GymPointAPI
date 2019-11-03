@@ -15,14 +15,20 @@ routes.post('/session', SessionController.store);
 
 routes.use(authMiddleware);
 
+//students
 routes.post('/students', StudentController.store);
 routes.put('/students/:id', StudentController.update);
 
+//plans
 routes.get('/plans', PlanController.index);
 routes.post('/plans', PlanController.store);
 routes.put('/plans/:id', PlanController.update);
 routes.delete('/plans/:id', PlanController.delete);
 
+//enrollments
+routes.get('/enrollments', EnrollmentController.index);
 routes.post('/enrollments', EnrollmentController.store);
+routes.put('/enrollments/:id', EnrollmentController.update);
+routes.delete('/enrollments/:id', EnrollmentController.delete);
 
 export default routes;

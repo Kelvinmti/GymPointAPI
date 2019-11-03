@@ -10,85 +10,92 @@ class PlanController {
   }
 
   async store(req, res) {
-    const schema = Yup.object().shape({
-      title: Yup.string().required('Campo title é obrigatório.'),
-      duration: Yup.number()
-        .required('Campo duration é obrigatório.')
-        .positive('Campo duration deve ser um número maior que zero.')
-        .integer('Campo duration deve ser um valor inteiro.')
-        .typeError('Campo duration deve ser um valor numérico.'),
-      price: Yup.number()
-        .required('Campo price é obrigatório.')
-        .typeError('Campo price deve ser um valor numérico.'),
-    });
-
-    await schema.validate(req.body).catch(err => {
-      return res.status(400).json({ error: err.errors });
-    });
-
     try {
-      const { id, title, duration, price, created_at } = await Plan.create(
+      const schema = Yup.object().shape({
+        title: Yup.string().required('Title field is required.'),
+        duration: Yup.number()
+          .required('Duration field is required.')
+          .positive('Duration field must be a number higher than zero.')
+          .integer('Duration field must be an integer number.')
+          .typeError('Duration field must be a number.'),
+        price: Yup.number()
+          .required('Price field is required.')
+          .typeError('Price field must be a number.'),
+      });
+
+      await schema.validate(req.body).catch(err => {
+        return res.status(400).json({ error: err.errors });
+      });
+
+    
+      const { id, title, duration, price, createdAt } = await Plan.create(
         req.body
       );
 
       return res.json({
-        id,
-        title,
-        duration,
-        price,
-        created_at,
+          id,
+          title,
+          duration,
+          price,
+          createdAt,
       });
     } catch (error) {
-      return res.json({ error });
+      console.log(error);
+      return res.json({ error: 'Error on trying to create the plan.' });
     }
   }
 
   async update(req, res) {
-    if (Object.keys(req.body).length === 0)
+    try {
+      if (Object.keys(req.body).length === 0)
       return res.status(400).json('Nothing to update.');
 
-    const schema = Yup.object().shape({
-      title: Yup.string(),
-      duration: Yup.number()
-        .positive('duration field must be a number higher than zero.')
-        .integer('duration field must be an integer.')
-        .typeError('duration field must be a number.'),
-      price: Yup.number().typeError('price field must be a number.'),
-    });
+      const schema = Yup.object().shape({
+        title: Yup.string(),
+        duration: Yup.number()
+          .positive('Duration field must be a number higher than zero.')
+          .integer('Duration field must be an integer.')
+          .typeError('Duration field must be a number.'),
+        price: Yup.number().typeError('Price field must be a number.'),
+      });
 
-    await schema.validate(req.body).catch(err => {
-      return res.status(400).json({ error: err.errors });
-    });
+      await schema.validate(req.body).catch(err => {
+        return res.status(400).json({ error: err.errors });
+      });
 
-    console.log(req.body);
+      const plan = await Plan.findByPk(req.params.id);
 
-    const plan = await Plan.findByPk(req.params.id);
+      if (!plan) {
+        return res.status(400).json({ error: 'Plan does not found.' });
+      }
 
-    if (!plan) {
-      return res.status(400).json({ error: 'Plan does not found.' });
+      const { title, duration, price, updatedAt } = await plan.update(req.body);
+
+      return res.json({
+        title,
+        duration,
+        price,
+        updatedAt,
+      });      
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(400)
+        .json({ error: 'Error on trying to update the plan.' });           
     }
-
-    const { title, duration, price, updated_at } = await plan.update(req.body);
-
-    return res.json({
-      title,
-      duration,
-      price,
-      updated_at,
-    });
   }
 
   async delete(req, res) {
-    const plan = await Plan.findByPk(req.params.id);
-
-    if (!plan) {
-      return res.status(400).json({ error: 'Plan does not exists.' });
-    }
-
     try {
+      const plan = await Plan.findByPk(req.params.id);
+
+      if (!plan) {
+        return res.status(400).json({ error: 'Plan does not exists.' });
+      }    
       await plan.destroy();
       return res.json({ msg: 'Plan deleted successfully!' });
     } catch (error) {
+      console.log(error);
       return res
         .status(400)
         .json({ error: 'Error on trying to delete the plan.' });
