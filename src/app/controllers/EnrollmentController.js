@@ -107,6 +107,21 @@ class EnrollmentController {
         price: total_price,
       });
 
+      const enrollment = await Enrollment.findOne({
+        where: { student_id, plan_id },
+        attributes: ['start_date', 'end_date', 'price'],
+        include: [
+          {
+            model: Student,
+            attributes: ['name', 'email'],
+          },
+          {
+            model: Plan,
+            attributes: ['title'],
+          },
+        ],
+      });
+
       return res.json({
         student_id,
         plan_id,
