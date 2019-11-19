@@ -6,6 +6,9 @@ import Enrollment from '../models/Enrollment';
 import Plan from '../models/Plan';
 import Student from '../models/Student';
 
+import Queue from '../../lib/Queue';
+import EnrollmentMail from '../jobs/EnrollmentMail';
+
 class EnrollmentController {
   async index(req, res) {
     try {
@@ -99,7 +102,7 @@ class EnrollmentController {
 
       const total_price = plan.price * plan.duration;
 
-      const { price, createdAt } = await Enrollment.create({
+      const { id, price, createdAt } = await Enrollment.create({
         student_id,
         plan_id,
         start_date: start_date_formated,
@@ -120,6 +123,12 @@ class EnrollmentController {
             attributes: ['title'],
           },
         ],
+	  });
+	  
+	  // const inserted = await Enrollment.findByPk(id); TESTAR ADD include para fazer join com outras entidades 
+
+      await Queue.add(EnrollmentMail.key, {
+        enrollment,
       });
 
       return res.json({

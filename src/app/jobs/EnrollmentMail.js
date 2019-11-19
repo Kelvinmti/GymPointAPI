@@ -16,7 +16,8 @@ class EnrollmentMail {
 
     await Mail.sendMail({
       to: `${enrollment.student.name} <${enrollment.student.email}>`,
-      subject: 'Matrícula Confirmada!!',
+      subject: 'Bem-vindo a GymPoint!!!',
+	  text: 'Matrícula efetuada com sucesso!',
       template: 'enrollment',
       context: {
         student: enrollment.student.name,
@@ -38,3 +39,4 @@ class EnrollmentMail {
 }
 
 export default new EnrollmentMail();
+

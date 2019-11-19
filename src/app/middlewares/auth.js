@@ -16,9 +16,15 @@ export default async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, authConfig.secret);
 
     req.userId = decoded.id;
+    console.log(authHeader);
+    console.log(token);
 
     return next();
   } catch (error) {
-      return res.status(401).json({ error: 'Invalid Token.' });    
+    console.log(error);
+    if (error.name == 'TokenExpiredError')
+      return res.status(401).json({ error: 'Expired Token.' });
+    
+    return res.status(401).json({ error: 'Invalid Token.' });    
   }
 };
