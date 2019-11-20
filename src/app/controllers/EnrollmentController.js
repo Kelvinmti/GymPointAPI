@@ -116,10 +116,12 @@ class EnrollmentController {
         include: [
           {
             model: Student,
+            as: 'student',
             attributes: ['name', 'email'],
           },
           {
             model: Plan,
+            as: 'plan',
             attributes: ['title'],
           },
         ],
