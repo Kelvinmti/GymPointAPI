@@ -32,6 +32,7 @@ class EnrollmentController {
           },
         ],
       });
+      console.log(enrollments);
 
       return res.json(enrollments);
     } catch (error) {
@@ -110,8 +111,24 @@ class EnrollmentController {
         price: total_price,
       });
 
-      const enrollment = await Enrollment.findOne({
-        where: { student_id, plan_id },
+      // const enrollment = await Enrollment.findOne({
+      //   where: { student_id, plan_id },
+      //   attributes: ['start_date', 'end_date', 'price', 'duration'],
+      //   include: [
+      //     {
+      //       model: Student,
+      //       as: 'student',
+      //       attributes: ['name', 'email'],
+      //     },
+      //     {
+      //       model: Plan,
+      //       as: 'plan',
+      //       attributes: ['title'],
+      //     },
+      //   ],
+      // });
+
+      const enrollment = await Enrollment.findByPk(id, {
         attributes: ['start_date', 'end_date', 'price'],
         include: [
           {
@@ -122,12 +139,10 @@ class EnrollmentController {
           {
             model: Plan,
             as: 'plan',
-            attributes: ['title'],
+            attributes: ['title', 'duration'],
           },
         ],
-	  });
-	  
-	  // const inserted = await Enrollment.findByPk(id); TESTAR ADD include para fazer join com outras entidades 
+      });
 
       await Queue.add(EnrollmentMail.key, {
         enrollment,
