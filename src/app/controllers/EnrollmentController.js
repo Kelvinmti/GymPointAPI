@@ -8,6 +8,7 @@ import Student from '../models/Student';
 
 import Queue from '../../lib/Queue';
 import EnrollmentMail from '../jobs/EnrollmentMail';
+import PagingHelper from '../../lib/PagingHelper';
 
 class EnrollmentController {
   async index(req, res) {
@@ -17,8 +18,8 @@ class EnrollmentController {
       const enrollments = await Enrollment.findAll({
         attributes: ['id', 'start_date', 'end_date', 'price'],
         order: [['created_at', 'desc']],
-        limit: 20, // paginacao
-        offset: (page - 1) * 20, // paginacao
+        limit: PagingHelper.MaxRows, // paginacao
+        offset: (page - 1) * PagingHelper.MaxRows, // paginacao
         include: [
           {
             model: Student,
