@@ -12,8 +12,6 @@ class EnrollmentMail {
   async handle({ data }) {
     const { enrollment } = data;
 
-    console.log('A fila executou');
-
     await Mail.sendMail({
       to: `${enrollment.student.name} <${enrollment.student.email}>`,
       subject: 'Bem-vindo a GymPoint!!!',

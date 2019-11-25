@@ -9,7 +9,6 @@ class HelpOrder extends Model {
       },
       {
         sequelize,
-        modelName: 'help_order',
       }
     );
 

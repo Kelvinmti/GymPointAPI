@@ -112,23 +112,6 @@ class EnrollmentController {
         price: total_price,
       });
 
-      // const enrollment = await Enrollment.findOne({
-      //   where: { student_id, plan_id },
-      //   attributes: ['start_date', 'end_date', 'price', 'duration'],
-      //   include: [
-      //     {
-      //       model: Student,
-      //       as: 'student',
-      //       attributes: ['name', 'email'],
-      //     },
-      //     {
-      //       model: Plan,
-      //       as: 'plan',
-      //       attributes: ['title'],
-      //     },
-      //   ],
-      // });
-
       const enrollment = await Enrollment.findByPk(id, {
         attributes: ['start_date', 'end_date', 'price'],
         include: [
