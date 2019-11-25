@@ -14,8 +14,23 @@ class HelpOrderController {
         return res.status(400).json({ error: 'Student not found.' });
       }
 
-      const helpOrders = await HelpOrder.findAll();
-      return res.json(helpOrders);
+      // const helpOrders = await HelpOrder.findAll({
+      //   where: {
+      //     student_id: id,
+      //   },
+      //   attributes: ['question', ['created_at', 'question_date']],
+      //   order: [['created_at', 'desc']],
+      //   include: [
+      //     {
+      //       model: Student,
+      //       as: 'student',
+      //       attributes: ['name', 'email'],
+      //     },
+      //   ],
+      // });
+      // return res.json(helpOrders);
+
+      return res.json(true);
     } catch (error) {
       console.log(error);
       return res.status(400).json({ error: 'Error on trying to list orders.' });
