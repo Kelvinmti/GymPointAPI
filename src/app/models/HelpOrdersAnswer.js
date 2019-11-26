@@ -18,7 +18,7 @@ class HelpOrdersAnswer extends Model {
   static associate(models) {
     this.belongsTo(models.HelpOrder, {
       foreignKey: 'order_id',
-      as: 'help_orders',
+      as: 'help_order',
     });
   }
 }
