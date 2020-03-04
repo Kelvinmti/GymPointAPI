@@ -31,25 +31,31 @@ class StudentController {
 
       if (errorMessage.length > 0)
         return res.status(400).json({ error: errorMessage });
-    
-      const { id, name, email, age, weight, height, createdAt } = await Student.create(
-        req.body
-      );
-  
+
+      const {
+        id,
+        name,
+        email,
+        age,
+        weight,
+        height,
+        createdAt,
+      } = await Student.create(req.body);
+
       return res.json({
         id,
         name,
         email,
         age,
         weight,
-        height, 
+        height,
         createdAt,
-      });      
+      });
     } catch (error) {
       console.log(error);
       return res
         .status(400)
-        .json({ error: 'Error on trying to create the student.' });         
+        .json({ error: 'Error on trying to create the student.' });
     }
   }
 
@@ -101,19 +107,17 @@ class StudentController {
         }
       }
 
-    
       const { name, age, weight, height, updatedAt } = await student.update(
         req.body
       );
-  
+
       return res.json({ id, name, email, age, weight, height, updatedAt });
     } catch (error) {
       console.log(error);
       return res
         .status(400)
-        .json({ error: 'Error on trying to update the student.' });      
+        .json({ error: 'Error on trying to update the student.' });
     }
-
   }
 }
 
