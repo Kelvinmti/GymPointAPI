@@ -2,13 +2,13 @@
 
 This is an example of an API that includes some comom routines used to manage a Gym.
 
-# Technologies
+## 💻 Technologies
 * Node.js
 * ORM Sequelize
 * Postgres
 
 
-## Setup
+## 🛠 Setup
 
 To clone and run this application, you will need:
 * [Git](https://git-scm.com)
@@ -39,8 +39,8 @@ $ yarn
 $ yarn sequelize db:migrate
 ```
 
-## Usage
-Now you are ready to start e teste the API.
+## 📌 Usage
+Now you are ready to start e test the API.
 
 From your command line:
 
