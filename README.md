@@ -1,6 +1,6 @@
 # GymPointAPI
 
-This is an example of an API that includes some comom routines used to manage a Gym.
+This is an example of an API that includes some common routines used to manage a gym.
 
 ## 💻 Technologies
 * Node.js
